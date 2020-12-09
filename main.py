@@ -78,7 +78,10 @@ async def svlist(ctx):
         li += sv.getServerName() + ' - ' + sv.getLastStatus() + '\n'
     await ctx.send('```' + li +'```')
 
-
+@bot.command()
+async def commands(ctx):
+    await ctx.send('```!start [serverName] - 啟動某個伺服器\n!stop [serverName] - 關閉某個伺服器\n!svlist - 顯示已載入的伺服器\n!reload - 重新載入各伺服器設定\n```')
+    
 async def serverChecker():
     await bot.wait_until_ready()
     channel = bot.get_channel(jdata['CHANNEL'])
