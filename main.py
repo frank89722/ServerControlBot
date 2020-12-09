@@ -29,10 +29,10 @@ def serverList():
                     servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR']))
                     svName.append(item)
                     lastStatus[item] = ''
-                    print(item + ' imported.')
+                    print(item + ' 已載入')
                     svjfile.close()
                 except:
-                    print(item + ' missing json file!')
+                    print(item + ' 沒有json檔案，所以跳過')
                     pass      
 
 @bot.event
@@ -45,9 +45,9 @@ async def start(ctx, svN):
         for sv in servers:
             if sv.getServerName() == svN:
                 if sv.startServer():
-                    await ctx.send(sv.getServerName() + ' is starting!')
+                    await ctx.send(sv.getServerName() + ' 正在啟動')
                 else:
-                    await ctx.send(sv.getServerName() + ' is already started!')
+                    await ctx.send(sv.getServerName() + ' 本來就開著了')
     else:
         await ctx.send('can\'t find ' + svN)
 
@@ -57,9 +57,9 @@ async def stop(ctx, svN):
         for sv in servers:
             if sv.getServerName() == svN:
                 if sv.stopServer():
-                    await ctx.send(sv.getServerName() + ' is stopping!')
+                    await ctx.send(sv.getServerName() + ' 正在關閉')
                 else:
-                    await ctx.send(sv.getServerName() + ' is already stopped!')
+                    await ctx.send(sv.getServerName() + ' 本來就是關的')
     else:
         await ctx.send('can\'t find ' + svN)
 
@@ -89,10 +89,10 @@ async def serverChecker():
         for sv in servers:
             if sv.checkRestart():
                 crp = discord.File(os.path.join(sv.getCrashReport()))
-                await channel.send(sv.getServerName() + ' crashed.')
+                await channel.send(sv.getServerName() + ' 炸了＝＝')
                 await channel.send(file = crp)
                 if sv.startServer():
-                    await channel.send(sv.getServerName() + ' restarting...')
+                    await channel.send(sv.getServerName() + ' 正在重起...')
             
             else:
                 if lastStatus[sv.getServerName()] != sv.getLastStatus():
