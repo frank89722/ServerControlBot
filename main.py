@@ -23,7 +23,7 @@ svName = []
 lastStatus = {}
 
 def serverList():
-    folder_content = os.listdir(jdata['BOT_DIR'])
+    folder_content = os.listdir(jdata['MC_DIR'])
     for i, item in enumerate(folder_content):
         if os.path.isdir(item):
             if (item not in ignoreDirs):
