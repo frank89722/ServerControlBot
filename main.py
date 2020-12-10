@@ -17,6 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 jdata = json.load(open('settings.json', 'r', encoding='utf-8'))
 
+ignoreDirs = ['.git', '__pycache__', 'funcs']
 servers = []
 svName = []
 lastStatus = {}
@@ -25,10 +26,10 @@ def serverList():
     folder_content = os.listdir(jdata['BOT_DIR'])
     for i, item in enumerate(folder_content):
         if os.path.isdir(item):
-            if(item != '.git' and item != '__pycache__' and item != 'funcs'):
+            if (item not in ignoreDirs):
                 try:
-                    svjdata = json.load(open(jdata['BOT_DIR'] + item + '/' + item + '.json', 'r', encoding='utf-8'))
-                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR'], jdata['BOT_DIR']))
+                    svjdata = json.load(open(jdata['MC_DIR'] + item + '/' + item + '.json', 'r', encoding='utf-8'))
+                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR'], jdata['MC_DIR']))
                     svName.append(item)
                     lastStatus[item] = ''
                     print(item + ' loaded')
