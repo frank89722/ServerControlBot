@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import time
 import json
@@ -13,26 +15,25 @@ intents.presences = False
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+jdata = json.load(open('settings.json', 'r', encoding='utf-8'))
+
 servers = []
 svName = []
 lastStatus = {}
 
 def serverList():
-    folder_content = os.listdir()
+    folder_content = os.listdir(jdata['BOT_DIR'])
     for i, item in enumerate(folder_content):
         if os.path.isdir(item):
             if(item != '.git' and item != '__pycache__' and item != 'funcs'):
                 try:
-                    with open(item + '/' + item + '.json', 'r', encoding='utf8') as svjfile:
-                        svjdata = json.load(svjfile)
-
-                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR']))
+                    svjdata = json.load(open(jdata['BOT_DIR'] + item + '/' + item + '.json', 'r', encoding='utf-8'))
+                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR'], jdata['BOT_DIR']))
                     svName.append(item)
                     lastStatus[item] = ''
-                    print(item + ' 已載入')
-                    svjfile.close()
+                    print(item + ' loaded')
                 except:
-                    print(item + ' 沒有json檔案，所以跳過')
+                    print(item + ' miss json file')
                     pass      
 
 @bot.event
@@ -49,7 +50,19 @@ async def start(ctx, svN):
                 else:
                     await ctx.send(sv.getServerName() + ' 本來就開著了')
     else:
-        await ctx.send('can\'t find ' + svN)
+        await ctx.send('找不到 ' + svN)
+
+@bot.command()
+async def kill(ctx, svN):
+    if svN in svName:
+        for sv in servers:
+            if sv.getServerName() == svN:
+                if sv.killServer():
+                    await ctx.send(sv.getServerName() + ' 被殺了')
+                else:
+                    await ctx.send(sv.getServerName() + ' 本來就是關的')
+    else:
+        await ctx.send('找不到 ' + svN)
 
 @bot.command()
 async def stop(ctx, svN):
@@ -61,15 +74,7 @@ async def stop(ctx, svN):
                 else:
                     await ctx.send(sv.getServerName() + ' 本來就是關的')
     else:
-        await ctx.send('can\'t find ' + svN)
-
-@bot.command()
-async def reload(ctx):
-    servers = []
-    svName = []
-    lastStatus = {}
-    serverList()
-    await ctx.send('重新載入完畢')
+        await ctx.send('找不到 ' + svN)
 
 @bot.command()
 async def svlist(ctx):
@@ -96,18 +101,22 @@ async def serverChecker():
             
             else:
                 if lastStatus[sv.getServerName()] != sv.getLastStatus():
-                    await channel.send(sv.getServerName() + ' is ' + sv.getLastStatus())
+                    await channel.send(sv.getServerName() + ' 狀態：' + sv.getLastStatus())
                     lastStatus[sv.getServerName()] = sv.getLastStatus()
                 
         await asyncio.sleep(1)
 
+@bot.command()
+async def reload(ctx):
+    servers = []
+    svName = []
+    lastStatus = {}
+
+    serverList()
+    await ctx.send('重新載入完畢')
     
 if __name__ == '__main__':
     serverList()
-    
-    with open('discord.json', 'r', encoding='utf8') as jfile:
-        jdata = json.load(jfile)
-
     bot.loop.create_task(serverChecker())
     bot.run(jdata['TOKEN'])
     

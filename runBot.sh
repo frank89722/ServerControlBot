@@ -1,1 +1,1 @@
-screen -dmS discordBot  python main.py
+screen -dmS discordBot  python3 main.py

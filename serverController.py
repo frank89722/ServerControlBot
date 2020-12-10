@@ -11,10 +11,11 @@ class serverController:
     serverJar = 'forge_server.jar'
     lastStatus = ''
 
-    def __init__(self, svName, para, Jar):
+    def __init__(self, svName, serverStartParameters, serverJar, bot_dir):
         self.svName = svName
-        self.serverStartParameters = para
-        self.serverJar = Jar
+        self.serverStartParameters = serverStartParameters
+        self.serverJar = serverJar
+        self.bot_dir= bot_dir
 
     def getLastStatus(self):
         return self.lastStatus
@@ -32,25 +33,25 @@ class serverController:
     def checkStatus(self):
         if self.svName in self.getScreen():
             if self.lastStatus != 'online':
-                print('\n' + self.svName + ' is online')
+                print(self.svName + ' is online')
                 self.lastStatus = 'online'
             return True
         else:
             if self.lastStatus != 'offline':
-                print('\n' + self.svName + ' is offline')
+                print(self.svName + ' is offline')
                 self.lastStatus = 'offline'
             return False
 
     def checkCrash(self):
         try:
-            crashes = os.listdir(self.svName + '/crash-reports')
+            crashes = os.listdir(self.dir + self.svName + '/crash-reports')
             
         except:
             return False
 
         isCrash = False
         for item in crashes:
-            if os.path.isfile(self.svName + '/crash-reports/' + item):
+            if os.path.isfile(self.dir + self.svName + '/crash-reports/' + item):
                 createTime = os.path.getctime(self.svName + '/crash-reports/' + item)
                 if(time.time() - createTime < 10):
                     isCrash = True
@@ -59,22 +60,21 @@ class serverController:
 
     def getCrashReport(self):
         try:
-            crashes = os.listdir(self.svName + '/crash-reports')
+            crashes = os.listdir(self.dir + self.svName + '/crash-reports')
         except:
             return ''
 
         lastCrashTime = 0
         lastCrashReport = ''
         for item in crashes:
-            if os.path.isfile(self.svName + '/crash-reports/' + item):
-                createTime = os.path.getctime(self.svName + '/crash-reports/' + item)
+            if os.path.isfile(self.dir + self.svName + '/crash-reports/' + item):
+                createTime = os.path.getctime(self.dir + self.svName + '/crash-reports/' + item)
                 if(createTime > lastCrashTime):
                     lastCrashTime = createTime
                     lastCrashReport = item
 
-        return self.svName + '/crash-reports/' + lastCrashReport
+        return self.dir + self.svName + '/crash-reports/' + lastCrashReport
         
-
     def startServer(self):
         if not self.checkStatus():
             os.chdir(self.svName)
@@ -88,10 +88,19 @@ class serverController:
     def stopServer(self):
         if self.checkStatus():
             self.server_command('stop')
-            print("Server stopped.")
+            print('Shutting down' + self.svName)
             return True
         else:
-            print("Server not running.")
+            print(self.svName + ' is not running.')
+            return False
+
+    def killServer(self):
+        if self.checkStatus():
+            os.system('screen -X -S ' + self.svName + ' kill')
+            print(self.svName + ' killed')
+            return True
+        else:
+            print(self.svName + ' is not running.')
             return False
 
     def checkRestart(self):
