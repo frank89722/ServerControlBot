@@ -2,4 +2,4 @@ sv/
 __pycache__/
 svctl.py
 test.py
-discord.json
+settings.json
