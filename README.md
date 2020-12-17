@@ -17,7 +17,7 @@ pip install discord
 Put your server folders under `"MC_DIR"`
 
 
-* And a json file named as same as your server folder under your `"MC_DIR"`directory
+* And a json file named as same as your server folder that under your `"MC_DIR"`directory
 
 ```
 {
