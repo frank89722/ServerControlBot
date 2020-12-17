@@ -9,7 +9,7 @@ pip install discord
 * You hava to create a settings.json in bot directory like this
 ```
 {
-    "MC_DIR":"/home/user/MCServers",
+    "MC_DIR":"/home/user/MCServers/",
     "TOKEN":"NzM4NzkwMDQzMTgyODI1NjIz.XyRB2A.ObUxHf-fZdjdGCsxcDWtqU1AULA",
     "CHANNEL":738672611846714950
 }
