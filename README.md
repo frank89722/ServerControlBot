@@ -1,8 +1,11 @@
 # ServerControlBot
 
-Require discord.py
+Require discord.py and Screen
 ```
 pip install discord
+
+#Arch
+sudo pacman -S screen
 ```
 
 ***
