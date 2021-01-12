@@ -21,6 +21,7 @@ ignoreDirs = ['.git', '__pycache__', 'funcs']
 servers = []
 svName = []
 lastStatus = {}
+checkPause = False
 
 def serverList():
     folder_content = os.listdir(jdata['MC_DIR'])
@@ -92,19 +93,20 @@ async def serverChecker():
     await bot.wait_until_ready()
     channel = bot.get_channel(jdata['CHANNEL'])
     while not bot.is_closed():
-        for sv in servers:
-            if sv.checkRestart():
-                crp = discord.File(os.path.join(sv.getCrashReport()))
-                await channel.send(sv.getServerName() + ' 炸了＝＝')
-                await channel.send(file = crp)
-                if sv.startServer():
-                    await channel.send(sv.getServerName() + ' 正在重起...')
-            
-            else:
-                if lastStatus[sv.getServerName()] != sv.getLastStatus():
-                    await channel.send(sv.getServerName() + ' 狀態：' + sv.getLastStatus())
-                    lastStatus[sv.getServerName()] = sv.getLastStatus()
-                
+        if not checkPause:
+            for sv in servers:
+                if sv.checkRestart():
+                    crp = discord.File(os.path.join(sv.getCrashReport()))
+                    await channel.send(sv.getServerName() + ' 炸了＝＝')
+                    await channel.send(file = crp)
+                    if sv.startServer():
+                        await channel.send(sv.getServerName() + ' 正在重起...')
+
+                else:
+                    if lastStatus[sv.getServerName()] != sv.getLastStatus():
+                        await channel.send(sv.getServerName() + ' 狀態：' + sv.getLastStatus())
+                        lastStatus[sv.getServerName()] = sv.getLastStatus()
+
         await asyncio.sleep(1)
 
 @bot.command()
