@@ -28,8 +28,8 @@ def serverList():
         if os.path.isdir(item):
             if (item not in ignoreDirs):
                 try:
-                    svjdata = json.load(open(jdata['MC_DIR'] + item + '/' + item + '.json', 'r', encoding='utf-8'))
-                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR'], jdata['MC_DIR']))
+                    svjdata = json.load(open(jdata['MC_DIR'] + '/' + item + '/' + item + '.json', 'r', encoding='utf-8'))
+                    servers.append(serverController(item, svjdata['JAVA_PARAMETERS'], svjdata['SERVER_JAR'], jdata['MC_DIR'] + '/'))
                     svName.append(item)
                     lastStatus[item] = ''
                     print(item + ' loaded')
@@ -109,11 +109,17 @@ async def serverChecker():
 
 @bot.command()
 async def reload(ctx):
-    servers = []
-    svName = []
-    lastStatus = {}
+    print('reload starting...')
+    checkPause = True
+    time.sleep(1.5)
+
+    servers.clear()
+    svName.clear()
+    lastStatus.clear()
 
     serverList()
+    checkPause = False
+    print('reload done')
     await ctx.send('重新載入完畢')
     
 if __name__ == '__main__':

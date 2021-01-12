@@ -11,11 +11,11 @@ class serverController:
     serverJar = 'forge_server.jar'
     lastStatus = ''
 
-    def __init__(self, svName, serverStartParameters, serverJar, bot_dir):
+    def __init__(self, svName, serverStartParameters, serverJar, mc_dir):
         self.svName = svName
         self.serverStartParameters = serverStartParameters
         self.serverJar = serverJar
-        self.bot_dir= bot_dir
+        self.mc_dir= mc_dir
 
     def getLastStatus(self):
         return self.lastStatus
@@ -44,15 +44,15 @@ class serverController:
 
     def checkCrash(self):
         try:
-            crashes = os.listdir(self.bot_dir + self.svName + '/crash-reports')
+            crashes = os.listdir(self.mc_dir + self.svName + '/crash-reports')
             
         except:
             return False
 
         isCrash = False
         for item in crashes:
-            if os.path.isfile(self.bot_dir + self.svName + '/crash-reports/' + item):
-                createTime = os.path.getctime(self.bot_dir + self.svName + '/crash-reports/' + item)
+            if os.path.isfile(self.mc_dir + self.svName + '/crash-reports/' + item):
+                createTime = os.path.getctime(self.mc_dir + self.svName + '/crash-reports/' + item)
                 if(time.time() - createTime < 10):
                     isCrash = True
 
@@ -60,24 +60,24 @@ class serverController:
 
     def getCrashReport(self):
         try:
-            crashes = os.listdir(self.bot_dir + self.svName + '/crash-reports')
+            crashes = os.listdir(self.mc_dir + self.svName + '/crash-reports')
         except:
             return ''
 
         lastCrashTime = 0
         lastCrashReport = ''
         for item in crashes:
-            if os.path.isfile(self.bot_dir + self.svName + '/crash-reports/' + item):
-                createTime = os.path.getctime(self.bot_dir + self.svName + '/crash-reports/' + item)
+            if os.path.isfile(self.mc_dir + self.svName + '/crash-reports/' + item):
+                createTime = os.path.getctime(self.mc_dir + self.svName + '/crash-reports/' + item)
                 if(createTime > lastCrashTime):
                     lastCrashTime = createTime
                     lastCrashReport = item
 
-        return self.bot_dir + self.svName + '/crash-reports/' + lastCrashReport
+        return self.mc_dir + self.svName + '/crash-reports/' + lastCrashReport
         
     def startServer(self):
         if not self.checkStatus():
-            os.chdir(self.bot_dir + self.svName)
+            os.chdir(self.mc_dir + self.svName)
             os.system('screen -dmS ' + self.svName + ' java ' + self.serverStartParameters + ' -jar ' + self.serverJar + ' nogui')
             print(self.svName + ' is starting')
             return True
