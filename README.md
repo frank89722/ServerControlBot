@@ -4,8 +4,11 @@ Require discord.py and Screen
 ```
 pip install discord
 
-#Arch
+#Arch 
 sudo pacman -S screen
+
+#Debian/Ubuntu
+sudo apt-get install screen
 ```
 
 ***
@@ -20,7 +23,7 @@ sudo pacman -S screen
 Put your server folders under `"MC_DIR"`
 
 
-* And a json file named as same as your server folder that under your `"MC_DIR"`directory
+* Put a json file named as same as your under ench server folder that in your `"MC_DIR"`directory
 
 ```
 {
