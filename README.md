@@ -23,7 +23,7 @@ sudo apt-get install screen
 Put your server folders under `"MC_DIR"`
 
 
-* Put a json file named as same as your under ench server folder that in your `"MC_DIR"`directory
+* Put a json file named as same as each server folder that in your `"MC_DIR"`directory
 
 ```
 {
