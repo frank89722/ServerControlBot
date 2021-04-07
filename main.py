@@ -100,7 +100,7 @@ async def serverChecker():
                     await channel.send(sv.getServerName() + ' 炸了＝＝')
                     await channel.send(file = crp)
                     if sv.startServer():
-                        await channel.send(sv.getServerName() + ' 正在重起...')
+                        await channel.send(sv.getServerName() + ' 正在重啟...')
 
                 else:
                     if lastStatus[sv.getServerName()] != sv.getLastStatus():
